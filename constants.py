@@ -46,8 +46,8 @@ class DockerOption(Enum):
 
 class DockerActionOption(Enum):
     EXIT = 1
-    UP = 2
-    LOGS = 3
+    LOGS = 2
+    UP = 3
     STOP = 4
     REMOVE = 5
     BASH = 6

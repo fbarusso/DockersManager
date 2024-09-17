@@ -74,19 +74,20 @@ def handle_individual_actions(c: Console) -> DockerOption:
 
 
 def handle_container_actions(c: Console, docker_option: DockerOption):
-    c.print(
-        f"Selected container: {docker_option.get_name()}",
-        style=docker_option.get_color(),
-    )
     while True:
+        c.clear()
+        c.print(
+            f"Selected container: {docker_option.get_name()}",
+            style=docker_option.get_color(),
+        )
         action_option = docker_action_input_option()
         if action_option == DockerActionOption.EXIT:
             break
-        elif action_option == DockerActionOption.UP:
-            child = up(container_name=docker_option.get_service_name())
-            child.close()
         elif action_option == DockerActionOption.LOGS:
             child = logs(container_name=docker_option.get_service_name())
+            child.close()
+        elif action_option == DockerActionOption.UP:
+            child = up(container_name=docker_option.get_name())
             child.close()
         elif action_option == DockerActionOption.STOP:
             child = stop(container_name=docker_option.get_service_name())

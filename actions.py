@@ -103,6 +103,8 @@ def up(container_name: str):
         container_name (str): The name of the Docker container to be started.
     """
     child = connect_to_ssh()
+    child.sendline(s="cd git/risk3-dev")
+    child.expect(pattern=r"\$")
     child.sendline(s=f"docker compose -p sb up -d {container_name}")
     child.interact()
     return child
