@@ -1,5 +1,7 @@
 import pexpect
 
+from credentials import SANDBOX_SSH_PASSWORD, GIT_SSH_PASSWORD
+
 
 def connect_to_ssh():
     """
@@ -10,7 +12,7 @@ def connect_to_ssh():
     child = pexpect.spawn(command="ssh dev")
     child.logfile_read = open(file="ssh.log", mode="wb")
     child.expect(pattern=r"passphrase")
-    child.sendline(s="201202")
+    child.sendline(s=SANDBOX_SSH_PASSWORD)
     child.expect(pattern=r"\$")
     return child
 
@@ -163,6 +165,6 @@ def clean_and_update(directory_name: str):
     child.expect(pattern=r"(Already|Switched)")
     child.sendline(s="git pull")
     child.expect(pattern=r"passphrase")
-    child.sendline(s="felipe123")
+    child.sendline(s=GIT_SSH_PASSWORD)
     child.interact()
     return child
