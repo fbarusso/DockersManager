@@ -9,6 +9,7 @@ class Option(Enum):
     UP_CONTAINERS = 5
     DOWN_CONTAINERS = 6
     PULL = 7
+    CLEAN_AND_UPDATE_ALL = 8
 
     def get_menu_option(self) -> str:
         return f"{self.value} {self.name.replace('_', ' ').title()}"

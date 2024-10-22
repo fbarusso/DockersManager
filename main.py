@@ -24,6 +24,7 @@ def input_option() -> Option:
     print(Option.UP_CONTAINERS.get_menu_option())
     print(Option.DOWN_CONTAINERS.get_menu_option())
     print(Option.PULL.get_menu_option())
+    print(Option.CLEAN_AND_UPDATE_ALL.get_menu_option())
     try:
         option = Option(int(input("Choose an option: ")))
         return option
@@ -61,7 +62,7 @@ def docker_action_input_option() -> DockerActionOption:
 
 def handle_main_menu(c: Console) -> Option:
     c.clear()
-    c.print("DockersManager v0.0.1", style="bold cyan")
+    c.print("DockersManager v0.0.2", style="bold cyan")
     option = input_option()
     return option
 
@@ -132,6 +133,15 @@ def start(c: Console):
             child.close()
         elif option == Option.PULL:
             child = pull()
+            child.close()
+        elif option == Option.CLEAN_AND_UPDATE_ALL:
+            child = clean_and_update(DockerOption.ATOMIK_CRAWLERS.get_directory())
+            child.close()
+            child = clean_and_update(DockerOption.CRAWLER_WORKER.get_directory())
+            child.close()
+            child = clean_and_update(DockerOption.GLOBAL_API.get_directory())
+            child.close()
+            child = clean_and_update(DockerOption.PIPELINE_WORKER.get_directory())
             child.close()
         else:
             pass
