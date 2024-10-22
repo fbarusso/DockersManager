@@ -10,7 +10,6 @@ def connect_to_ssh():
         pexpect.spawn: The pexpect child object representing the SSH session.
     """
     child = pexpect.spawn(command="ssh dev")
-    child.logfile_read = open(file="ssh.log", mode="wb")
     child.expect(pattern=r"passphrase")
     child.sendline(s=SANDBOX_SSH_PASSWORD)
     child.expect(pattern=r"\$")
@@ -167,4 +166,47 @@ def clean_and_update(directory_name: str):
     child.expect(pattern=r"passphrase")
     child.sendline(s=GIT_SSH_PASSWORD)
     child.interact()
+    return child
+
+
+def clean_and_update_directory(child, directory_name: str):
+    """
+    Cleans and updates a specified directory on the 'dev' server.
+    Args:
+        child (pexpect.spawn): The pexpect child object representing the SSH session.
+        directory_name (str): The name of the directory to be cleaned and updated.
+    """
+    child.sendline(s=f"cd {directory_name}")
+    child.expect(pattern=r"\$")
+    child.sendline(s="git clean -df")
+    child.expect(pattern=r"\$")
+    child.sendline(s="git restore .")
+    child.expect(pattern=r"\$")
+    child.sendline(s="git checkout develop")
+    child.expect(pattern=r"(Already|Switched)")
+    child.sendline(s="git pull")
+    child.expect(pattern=r"passphrase")
+    child.sendline(s=GIT_SSH_PASSWORD)
+    child.expect(pattern=r"\$")
+    return child
+
+
+def clean_and_update_all():
+    """
+    Cleans and updates all specified directories on the 'dev' server.
+    """
+    directories = [
+        "~/git/risk3-dev/risk3-atomik-crawlers",
+        "~/git/risk3-dev/risk3-crawler-worker",
+        "~/git/risk3-dev/risk3-global-api",
+        "~/git/risk3-dev/risk3-pipeline-worker",
+    ]
+
+    child = connect_to_ssh()
+    for directory in directories:
+        clean_and_update_directory(child=child, directory_name=directory)
+
+    child.sendline("exit")
+    child.expect(pexpect.EOF)
+
     return child

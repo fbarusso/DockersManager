@@ -12,6 +12,7 @@ from actions import (
     bash,
     clean_and_update,
     pull,
+    clean_and_update_all,
 )
 from constants import Option, DockerOption, DockerActionOption
 
@@ -135,13 +136,7 @@ def start(c: Console):
             child = pull()
             child.close()
         elif option == Option.CLEAN_AND_UPDATE_ALL:
-            child = clean_and_update(DockerOption.ATOMIK_CRAWLERS.get_directory())
-            child.close()
-            child = clean_and_update(DockerOption.CRAWLER_WORKER.get_directory())
-            child.close()
-            child = clean_and_update(DockerOption.GLOBAL_API.get_directory())
-            child.close()
-            child = clean_and_update(DockerOption.PIPELINE_WORKER.get_directory())
+            child = clean_and_update_all()
             child.close()
         else:
             pass
